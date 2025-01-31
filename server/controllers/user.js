@@ -88,3 +88,32 @@ export async function getUserDetails(req,res){
         return res.status(500).json({ success: false, message: "Server Error" })
     }
 }
+
+export async function handleRemoveFriend(req, res) {
+    const { currentUserEmail, friendEmail } = req.body;
+    try {
+        const updatedUser = await User.findOneAndUpdate(
+            { email: currentUserEmail },  
+            { $pull: { friends: { email: friendEmail } } }, 
+            { new: true }
+        );
+        await User.findOneAndUpdate(
+            { email: friendEmail },
+            { $pull: { friends: { email: currentUserEmail } } },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Friend removed successfully",
+            updatedUser,
+        });
+    } catch (e) {
+        console.log("Error while removing friend", e.message);
+        return res.status(500).json({ success: false, message: "Server Error" });
+    }
+}

@@ -19,7 +19,7 @@ const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
 
     return(
         <div className="flex justify-between items-center p-4 bg-blue-500 text-white">
-            <div className="text-2xl font-semibold">Website Logo</div>
+            <div className="text-2xl font-semibold">Friends</div>
             <div className="flex items-center space-x-6">
             <input
                 type="text"

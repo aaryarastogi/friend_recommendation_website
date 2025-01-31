@@ -18,7 +18,7 @@ const UsersList = () => {
         const filteredUsers = users.filter((user) =>
             user.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-      
+    // console.log(filteredUsers);
 
     const getLoggedInUser = () => {
       const token = localStorage.getItem("token");
@@ -57,8 +57,8 @@ const UsersList = () => {
           },
         })
         .then((response) => {
-          // console.log(response.data); // Check the response in the console
-          setFriends(response.data.friends);
+          // console.log(response.data.userDetails.friends); // Check the response in the console
+          setFriends(response.data.userDetails.friends);
           setFriendRequests(response.data.friendRequests); // Update friendRequests state
           setSentRequests(response.data.sentRequests); // Update sentRequests state
         })
@@ -66,7 +66,7 @@ const UsersList = () => {
 
       }, []);
     
- 
+      console.log(friends)
   return (
     <div>
         <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} name={name} friendRequests={friendRequests}/>
@@ -77,6 +77,7 @@ const UsersList = () => {
           friendRequests={friendRequests}
           setFriendRequests={setFriendRequests}
           sentRequests={sentRequests}
+          setSentRequests={setSentRequests}
           friends={friends}
           setFriends={setFriends}
         />

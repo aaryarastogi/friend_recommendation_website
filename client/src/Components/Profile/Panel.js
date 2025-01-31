@@ -66,7 +66,7 @@ const Panel=({sentRequests , friendRequests , friends})=>{
                     {friends.length > 0 ? (
                     <ul>
                         {friends.map((friend, index) => (
-                        <li key={index} className="border-b py-2">{friend}</li>
+                        <li key={index} className="border-b py-2">{friend.name}</li>
                         ))}
                     </ul>
                     ) : (

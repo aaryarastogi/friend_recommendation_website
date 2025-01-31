@@ -27,7 +27,7 @@ export async function handleSendRequest(req, res) {
         await sender.save();
         await receiver.save();
 
-        return res.status(200).json({ message: "Friend request sent!" });
+        return res.status(200).json({ message: "Friend request sent!" , sender: sender , receiver: receiver });
     } catch (error) {
         console.error("Error in handleSendRequest:", error); // Log the full error
         return res.status(500).json({ message: "Server error" });
@@ -45,22 +45,22 @@ export async function handleRemoveRequest(req, res) {
         }
 
         // Remove receiver's email from sender's sentRequests
-        sender.sentRequests = sender.sentRequests.filter(email => email !== receiverEmail);
+        sender.sentRequests = sender.sentRequests.filter(user => user.email !== receiverEmail);
         // Remove sender's email from receiver's friendRequests
-        receiver.friendRequests = receiver.friendRequests.filter(email => email !== senderEmail);
+        receiver.friendRequests = receiver.friendRequests.filter(user => user.email !== senderEmail);
+
+        console.log("remove request")
 
         await sender.save();
         await receiver.save();
 
-        res.status(200).json({ message: "Friend request removed!" });
+        return res.status(200).json({ message: "Friend request removed!" });
     } catch (error) {
         console.error("Error in handleRemoveRequest:", error);
         res.status(500).json({ message: "Server error" });
     }
 }
 export async function  handleAcceptRequest(req,res) {
-    // console.log(req.body);
-
     const { currentUserEmail , requestSenderEmail} = req.body;
     try {
         const currentUser = await User.findOne({email: currentUserEmail});
@@ -70,12 +70,12 @@ export async function  handleAcceptRequest(req,res) {
         return res.status(404).json({ message: "User not found" });
         }
 
-        // // Remove from friend requests
+        // Remove from friend requests
         currentUser.friendRequests = currentUser.friendRequests.filter(
-            (email) => email !== requestSenderEmail
+            (user) => user.email!== requestSenderEmail
         );
         sender.sentRequests = sender.sentRequests.filter(
-            (email) => email !== currentUserEmail
+            (user) => user.email !== currentUserEmail
         );
 
         // Add as friends

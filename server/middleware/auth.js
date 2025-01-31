@@ -12,7 +12,7 @@ export const authenticateToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, secretKey);
     req.user = decoded; // Attach decoded user data to the request
-    console.log("token verification passed");
+    // console.log("token verification passed");
     next();
   } catch (error) {
     console.error("Token verification failed:", error.message);
