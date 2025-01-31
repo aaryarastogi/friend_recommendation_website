@@ -1,0 +1,90 @@
+import User from '../models/user.js';
+import bcrypt from 'bcrypt';
+
+export async function handleUserSignup(req,res){
+    const{name , email , password}=req.body;
+    try{
+        const hashedPassword=await bcrypt.hash(password,10);
+        const data={
+            name:name,
+            email:email,
+            password:hashedPassword,
+        }
+        const check=await User.findOne({email:email})
+
+        if(check){
+            alert("User already exists....")
+            res.json("exist")
+        }
+        else{
+            res.json("notexist")
+            await User.insertMany([data])
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
+export async function handleUserSignin(req, res) {
+    const { email, password } = req.body;
+
+    try {
+        const check = await User.findOne({ email }); // Check if user exists
+
+        if (!check) {
+            return res.status(404).json({ message: "not exist" });
+        }
+        const isPwdMatch = await bcrypt.compare(password, check.password);
+
+        if (!isPwdMatch) {
+            return res.status(400).json({ message: "Incorrect password" });
+        }
+
+        const token = await check.generateAuthToken();
+        if (!token) {
+            return res.status(500).json({ message: "Token generation failed" });
+        }
+        // Set the cookie first
+        res.cookie("jwtAuth", token, {
+            expires: new Date(Date.now() + 25892000000),
+            httpOnly: true,
+        });
+        // Return a proper JSON response
+        return res.status(200).json({ message: "exist", token , email: email , password: password});
+
+    } catch (e) {
+        console.error("Error during sign-in:", e);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export async function fetchAllUsers(req,res){
+    try {
+    const currentUserEmail = req.users;
+    const users = await User.find({ email: { $ne: currentUserEmail } });
+
+    if (!users) {
+        return res.status(404).json({ success: false, message: "No users found." });
+    }
+
+    return res.status(200).json({ success: true, users });
+    } catch (error) {
+    console.log("Error fetching users:", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+    }
+}
+
+
+export async function getUserDetails(req,res){
+    try{
+        const mailid = req.body;
+        const user = await User.findOne({email: req.user.user.email});
+
+        return res.status(200).json({message: "fine..." , user});
+    }
+    catch(e){
+        console.log("error while fetching user details", e.message);
+        return res.status(500).json({ success: false, message: "Server Error" })
+    }
+}

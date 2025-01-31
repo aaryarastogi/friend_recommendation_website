@@ -1,15 +1,35 @@
 import express from "express";
 import connectDB from "./config/db.js";
+import userRoute from "./routes/user.js";
+import cors from "cors";
+import { authenticateToken } from "./middleware/auth.js";
 
 const app = express();
 
 // Middleware
 app.use(express.json()); // Parses JSON requests
+app.use(cors());
 
 // Default route
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
+app.use("/api/users", userRoute);
+
+app.get('/user', authenticateToken, async(req, res) => {
+    // console.log('body',req.user);
+    // console.log('body' , req.user);
+    try{
+        const userData=await collection.findOne({_id:req.user.user._id});
+        // console.log('data',userData);
+        if(userData){
+            return res.status(200).json({success:true,user:userData})
+        }else{
+            console.log('userdata failed');
+        }
+    }catch(e){
+        console.log('/user not working',e.message);
+        return res.status(400).json({success:false})
+    }
+})
+
 
 connectDB(process.env.USERNAME , process.env.PASSWORD); //connection of DB
 
