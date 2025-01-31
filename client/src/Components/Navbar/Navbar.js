@@ -2,20 +2,26 @@ import React, { useState } from "react";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { IconButton, Popover, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
     const[open,setOpen]=useState(false);
     const navigate = useNavigate();
-
-    // friendRequests.map((req)=>console.log(req));
+    const [isPopupVisible, setPopupVisible] = useState(false);
 
     const handleProfile=()=>{
-        const user = { name: 'Aarya', age: 22 }; // Example props you want to pass
-
-        navigate('/profile', {
-            state: { user }
-        });
+        navigate('/profile');
     }
+
+    const handleLogout = () => {
+        // Remove the token from localStorage
+        localStorage.removeItem('token');
+    
+        // Redirect to the sign-in page
+        navigate('/signin');
+    };
+
 
     return(
         <div className="flex justify-between items-center p-4 bg-blue-500 text-white">
@@ -37,7 +43,7 @@ const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
                     <NotificationsIcon />
                     </IconButton>
                     <span className="absolute top-0 right-0 text-xs text-red-500 bg-white px-1 rounded-full">
-                    {friendRequests.length}
+                     {friendRequests.length > 0 ? friendRequests.length : 0}
                     </span>
                 </button>
 
@@ -66,7 +72,35 @@ const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
                     </div>
                 )}
                 </div>
-            <p className="bg-blue-300 font-bold rounded-full text-2xl px-4 py-2 text-blue-800 cursor-pointer" onClick={handleProfile}>{name.charAt(0)}</p>
+            <p 
+                className="bg-blue-300 font-bold rounded-full text-2xl px-4 py-2 text-blue-800 cursor-pointer" 
+                onMouseEnter={() => setPopupVisible(true)}
+                onMouseLeave={() => setPopupVisible(false)} 
+                onClick={handleProfile}>
+                    {name.charAt(0)}
+            </p>
+            
+            {isPopupVisible && (
+                <div
+                className="absolute top-12 right-0 bg-blue-300 text-white border border-gray-200 rounded-md shadow-lg w-40 text-start"
+                onMouseEnter={() => setPopupVisible(true)}
+                onMouseLeave={() => setPopupVisible(false)}
+                >
+                <div
+                    className="px-4 py-2 hover:bg-blue-500 cursor-pointer rounded-md"
+                    onClick={handleProfile}
+                >
+                    <AccountCircleIcon/> &nbsp; &nbsp; Profile
+                </div>
+                <div
+                    className="px-4 py-2 hover:bg-blue-500 cursor-pointer rounded-md"
+                    onClick={handleLogout}
+                >
+                    Logout &nbsp; &nbsp; <LogoutIcon/>
+                </div>
+                </div>
+            )}
+
             </div>
         </div>
     )

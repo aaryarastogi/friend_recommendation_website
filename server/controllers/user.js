@@ -5,6 +5,7 @@ export async function handleUserSignup(req,res){
     const{name , email , password}=req.body;
     try{
         const hashedPassword=await bcrypt.hash(password,10);
+
         const data={
             name:name,
             email:email,
@@ -17,6 +18,9 @@ export async function handleUserSignup(req,res){
             res.json("exist")
         }
         else{
+            if(!name || !email || !password){
+                alert("Kindly fill all details!...")
+            }
             res.json("notexist")
             await User.insertMany([data])
         }

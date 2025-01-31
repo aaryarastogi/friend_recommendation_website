@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
 import axios from 'axios';
 import Panel from './Panel';
 import { Button } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Navbar from '../Navbar/Navbar';
 
 const ProfilePage = () => {
     const[name,setName]=useState("");
@@ -70,6 +72,12 @@ const ProfilePage = () => {
     <div className="w-full mx-auto p-4">
       <div className="flex flex-row justify-between items-center bg-white p-6 rounded-lg w-auto mx-[10%]">
         <div className='flex flex-row'>
+        <Link
+          to="/users"
+          className="pt-4 text-2xl text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center"
+        >
+          <ArrowBackIcon className="mr-2" /> 
+        </Link>
           <p className="bg-blue-300 font-bold rounded-full text-3xl w-16 h-16 flex items-center justify-center text-blue-800 cursor-pointer mr-6">
             {name.charAt(0)}
           </p>

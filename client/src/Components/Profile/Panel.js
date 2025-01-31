@@ -39,7 +39,12 @@ const Panel=({sentRequests , friendRequests , friends})=>{
     
     return(
         <div>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{
+                borderBottom: 1,
+                borderColor: 'divider',
+                display: 'flex',
+                justifyContent: 'center', // Center horizontally
+            }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Sent Requests" {...a11yProps(0)} />
                     <Tab label="Friends" {...a11yProps(1)} />
