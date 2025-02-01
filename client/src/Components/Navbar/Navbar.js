@@ -4,8 +4,9 @@ import { IconButton, Popover, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import axios from "axios";
 
-const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
+const Navbar=({searchQuery , setSearchQuery , name , friends , friendRequests , setFriends , setFriendRequests , currentUser})=>{
     const[open,setOpen]=useState(false);
     const navigate = useNavigate();
     const [isPopupVisible, setPopupVisible] = useState(false);
@@ -17,11 +18,27 @@ const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
     const handleLogout = () => {
         // Remove the token from localStorage
         localStorage.removeItem('token');
-    
-        // Redirect to the sign-in page
         navigate('/signin');
     };
 
+    const acceptFriendRequest = async (requestSenderEmail) => {
+        try {
+            const response = await axios.post("http://localhost:8000/api/users/accept-request", {
+                currentUserEmail: currentUser,
+                requestSenderEmail,
+            });
+
+            // Add to friends list
+            setFriends([...(friends || []), { name: response.data.sender.name, email: response.data.sender.email }]);
+
+            // Remove from friend requests
+            setFriendRequests(friendRequests.filter(user => user.email !== requestSenderEmail));
+        } catch (error) {
+            console.error("Error accepting request:", error);
+        }
+    };
+
+    console.log("friendrequests:",friendRequests);
 
     return(
         <div className="flex justify-between items-center p-4 bg-blue-500 text-white">
@@ -56,7 +73,9 @@ const Navbar=({searchQuery , setSearchQuery , name , friendRequests})=>{
                             <li key={request.id} className="flex justify-between items-center p-2 border-b last:border-0">
                             <span className="text-gray-800 text-sm">{request.name}</span>
                             <div className="flex space-x-2">
-                                <button className="text-white bg-blue-500 hover:bg-blue-600 text-sm px-2 py-1 rounded">
+                                <button className="text-white bg-blue-500 hover:bg-blue-600 text-sm px-2 py-1 rounded"
+                                onClick={()=>{acceptFriendRequest(request.email)}}
+                                >
                                 Confirm
                                 </button>
                                 <button className="text-white bg-red-500 hover:bg-red-600 text-sm px-2 py-1 rounded">

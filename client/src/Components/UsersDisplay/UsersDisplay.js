@@ -66,7 +66,16 @@ const UsersList = () => {
       
   return (
     <div>
-        <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} name={name} friendRequests={friendRequests}/>
+        <Navbar 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+          name={name} 
+          friends={friends}
+          friendRequests={friendRequests}
+          setFriends={setFriends}
+          setFriendRequests={setFriendRequests}
+          currentUser={currentUser} 
+          />
          {/* Users List */}
         <UsersLists 
           filteredUsers={filteredUsers} 
