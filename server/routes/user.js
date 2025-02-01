@@ -1,6 +1,6 @@
 import express from "express";
 import {fetchAllUsers, getUserDetails, handleRemoveFriend, handleUserSignin , handleUserSignup} from '../controllers/user.js';
-import { fetchRequests, handleAcceptRequest, handleRemoveRequest, handleSendRequest } from "../controllers/requests.js";
+import { deleteUserRequest, fetchRequests, handleAcceptRequest, handleRemoveRequest, handleSendRequest } from "../controllers/requests.js";
 import { authenticateToken } from "../middleware/auth.js";
 import { fetchFriends } from "../controllers/friends.js";
 
@@ -25,5 +25,7 @@ router.get('/requests', authenticateToken , fetchRequests);
 router.get('/user-details',authenticateToken , getUserDetails);
 
 router.post('/friends',fetchFriends);
+
+router.post('/delete-request',deleteUserRequest);
 
 export default router;

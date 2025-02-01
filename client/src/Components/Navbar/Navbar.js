@@ -16,7 +16,6 @@ const Navbar=({searchQuery , setSearchQuery , name , friends , friendRequests , 
     }
 
     const handleLogout = () => {
-        // Remove the token from localStorage
         localStorage.removeItem('token');
         navigate('/signin');
     };
@@ -35,6 +34,27 @@ const Navbar=({searchQuery , setSearchQuery , name , friends , friendRequests , 
             setFriendRequests(friendRequests.filter(user => user.email !== requestSenderEmail));
         } catch (error) {
             console.error("Error accepting request:", error);
+        }
+    };
+
+    const deleteFriendRequest=async(userMail) => {
+        console.log(currentUser , userMail);
+        try{
+            const response = await axios.post("http://localhost:8000/api/users/delete-request",{
+                currentUserEmail: currentUser,
+                userMail
+            });
+            console.log(response);
+            if(response.statusText=='OK'){
+                const updatedRequests = friendRequests.filter(request => request.email !== userMail);
+                setFriendRequests(updatedRequests);
+                console.log("Deletion of request")
+            }
+            else{
+                console.error("error in deleting request");
+            }
+        }catch(e){
+            console.error("error while deleting request of user",e)
         }
     };
 
@@ -78,7 +98,9 @@ const Navbar=({searchQuery , setSearchQuery , name , friends , friendRequests , 
                                 >
                                 Confirm
                                 </button>
-                                <button className="text-white bg-red-500 hover:bg-red-600 text-sm px-2 py-1 rounded">
+                                <button className="text-white bg-red-500 hover:bg-red-600 text-sm px-2 py-1 rounded"
+                                onClick={()=>{deleteFriendRequest(request.email)}}
+                                >
                                 Delete
                                 </button>
                             </div>

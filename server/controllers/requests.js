@@ -117,3 +117,21 @@ export async function fetchRequests(req, res) {
         res.status(500).json({ message: "Error fetching requests..." });
     }
   }
+
+  export async function deleteUserRequest(req, res) {
+    const { currentUserEmail, userEmail } = req.body;
+
+    try {
+        const user = await User.findOne({ email: currentUserEmail });
+
+        if (!user) {
+            return res.status(404).json({ message: "Current user not found." });
+        }
+        user.friendRequests = user.friendRequests.filter(request => request.email !== userEmail);
+        await user.save();
+        return res.status(200).json({ message: "Friend request deleted successfully." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error while deleting friend request." });
+    }
+}
