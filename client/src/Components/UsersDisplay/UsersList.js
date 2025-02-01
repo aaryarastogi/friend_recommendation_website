@@ -7,7 +7,7 @@ const UsersLists = ({ filteredUsers, currentUser, friendRequests, setFriendReque
 
     useEffect(() => {
         if (sentRequests && sentRequests.length > 0) {
-            setSentRequestsState(sentRequests.map(request => request.email)); // Ensure emails are stored correctly
+            setSentRequestsState(sentRequests.map(request => request.email));
         }
     }, [sentRequests]);
 
@@ -125,7 +125,7 @@ const UsersLists = ({ filteredUsers, currentUser, friendRequests, setFriendReque
                         </div>
                     </div>
                     
-                    {isRecommended && <span className="text-sm text-green-600 italic font-semibold">Recommended</span>}
+                    {isRecommended && <span className="text-sm text-green-600 italic font-semibold">Recommended {}</span>}
 
                     <button
                         key={user.email}

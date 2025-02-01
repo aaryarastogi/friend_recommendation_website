@@ -42,7 +42,6 @@ userSchema.methods.generateAuthToken=async function () {
                 }
             },"thisisafriendrecommendationsystem",{expiresIn:'24h'}
         )
-        console.log("token /models/user.js file",this.name);
         this.tokens=[];
         this.tokens=this.tokens.concat({token:token})
         await this.save();

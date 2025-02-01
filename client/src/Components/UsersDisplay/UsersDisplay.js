@@ -13,12 +13,10 @@ const UsersList = () => {
     const [sentRequests, setSentRequests] = useState([]);
     const[friends,setFriends]=useState([]);
 
-    // const [clickedUsers, setClickedUsers] = useState({});
     const [searchQuery, setSearchQuery] = useState("");
         const filteredUsers = users.filter((user) =>
             user.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    // console.log(filteredUsers);
 
     const getLoggedInUser = () => {
       const token = localStorage.getItem("token");
@@ -59,14 +57,13 @@ const UsersList = () => {
         .then((response) => {
           // console.log(response.data.userDetails.friends); // Check the response in the console
           setFriends(response.data.userDetails.friends);
-          setFriendRequests(response.data.friendRequests); // Update friendRequests state
-          setSentRequests(response.data.sentRequests); // Update sentRequests state
+          setFriendRequests(response.data.friendRequests);
+          setSentRequests(response.data.sentRequests);
         })
         .catch((error) => console.error("Error fetching requests:", error));
 
       }, []);
-    
-      console.log(friends)
+      
   return (
     <div>
         <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} name={name} friendRequests={friendRequests}/>

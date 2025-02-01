@@ -10,35 +10,42 @@ const Signup = () => {
     const[password,setPassword]=useState("");
 
     const handleSubmit = async (e) => {
-      e.preventDefault(); 
+      e.preventDefault();
   
+      // Validate if all fields are filled
+      if (!name || !email || !password) {
+          alert("Kindly fill all details...");
+          return;
+      }
       try {
-          await axios.post(
+          const response = await axios.post(
               "http://localhost:8000/api/users/signup",
               {
                   name: name,
                   email: email,
-                  password: password
+                  password: password,
               },
               {
                   headers: {
-                      "Content-Type": "application/json", 
+                      "Content-Type": "application/json",
                   },
               }
-          )
-          .then(res => {
-              console.log("Signup Successful:", res.data);
-              alert("You are successfully signup... Now sign in your account"); 
-              window.location.href = "/signin";
-          })
-          .catch(error => {
-              console.error("Signup Failed:", error.response ? error.response.data : error.message);
-              alert(error.response?.data?.message || "Signup failed, please try again.");
-          });
-  
+          );
+          if (response.status === 201) {
+              alert("You have successfully signed up! Now sign in to your account.");
+              window.location.href = "/signin"; 
+          }
       } catch (error) {
-          console.error("Error signing up:", error);
-          alert("An error occurred. Please try again.");
+          if (error.response) {
+              console.error("Signup Failed:", error.response.data);
+              alert(error.response.data.message || "Signup failed, please try again.");
+          } else if (error.request) {
+              console.error("No response received:", error.request);
+              alert("No response from the server. Please try again.");
+          } else {
+              console.error("Error setting up the request:", error.message);
+              alert("An error occurred. Please try again.");
+          }
       }
   };
   
