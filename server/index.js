@@ -30,9 +30,7 @@ app.get('/user', authenticateToken, async(req, res) => {
     }
 })
 
-
 connectDB(process.env.USERNAME , process.env.PASSWORD); //connection of DB
-
 
 const PORT=process.env.PORT || 8000;
 
