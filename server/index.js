@@ -14,11 +14,8 @@ app.use(cors());
 app.use("/api/users", userRoute);
 
 app.get('/user', authenticateToken, async(req, res) => {
-    // console.log('body',req.user);
-    // console.log('body' , req.user);
     try{
         const userData=await collection.findOne({_id:req.user.user._id});
-        // console.log('data',userData);
         if(userData){
             return res.status(200).json({success:true,user:userData})
         }else{
